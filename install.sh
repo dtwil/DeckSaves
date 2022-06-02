@@ -27,7 +27,7 @@ fi
 
 # Unzip rclone
 if [ $? -eq 0 ]; then
-    unzip rclone.zip
+    unzip -j -o rclone.zip -d rclone/
 else
     zenity --error \
         --text="Downloading rclone failed." \
