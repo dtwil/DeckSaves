@@ -2,7 +2,7 @@
 . decksaves.config
 
 zip -r saves.zip saves/
-.$rclone_path copy saves.zip remote:$remote_path --progress > log.txt 2>&1
+.$rclone_path copy saves.zip $remote_name:$remote_path --progress > log.txt 2>&1
 if [ $? -eq 0 ]; then
     zenity --info \
         --text="Successfully backed up saves!" \

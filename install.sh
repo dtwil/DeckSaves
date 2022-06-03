@@ -38,6 +38,7 @@ fi
 touch decksaves.config
 echo "#!/bin/bash" >> decksaves.config
 echo "rclone_path=/rclone/rclone" >> decksaves.config
+echo "remote_name=DeckSaves" >> decksaves.config
 echo "remote_path=DeckSaves" >> decksaves.config
 chmod +x decksaves.config
 
