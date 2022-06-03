@@ -1,7 +1,7 @@
 #!/bin/bash
 DOWNLOAD_LINK="https://downloads.rclone.org/rclone-current-linux-amd64.zip"
 WELCOME_MSG="Welcome to DeckSaves!\n\nDeckSaves will be installed to this directory."
-SUCCESS_MSG="Install complete!\n\nYou must configure rclone before proceeding (see DeckSave's GitHub for instructions)."
+SUCCESS_MSG="Install complete!\n\nAdd folders by running add_saves.sh, and back them up by running decksaves.sh."
 
 # Display welcome message
 zenity --info \
@@ -42,6 +42,17 @@ echo "remote_name=DeckSaves" >> decksaves.config
 echo "remote_path=DeckSaves" >> decksaves.config
 chmod +x decksaves.config
 
-zenity --info \
-    --text="$SUCCESS_MSG" \
-    --width=250
+# Create rclone config
+. decksaves.config
+timeout 1m .$rclone_path config create $remote_name drive
+
+# Show success dialog
+if [ $? -eq 0 ]; then
+    zenity --info \
+        --text="$SUCCESS_MSG" \
+        --width=250
+else
+    zenity --error \
+        --text="DeckSave did not finish setup. Try running the installer again." \
+        --width=250
+fi
