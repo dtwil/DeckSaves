@@ -8,7 +8,7 @@ symlink_from_path () {
 # Get game name and folder from the user
 game_data=$(zenity --forms \
     --title="$TITLE" \
-    --text="Add your save" \
+    --text="Add your save folder" \
     --add-entry="Name (e.g. EmuDeck):" \
     --add-entry="Path to save folder:" \
     --width=300)
@@ -18,7 +18,6 @@ if [ $? -eq 0 ]; then
     name=$(echo $game_data | cut -d "|" -f 1)
     name="${name// /_}"
     path=$(echo $game_data | cut -d "|" -f 2)
-    echo $path
 else
     exit 1
 fi
@@ -34,3 +33,14 @@ fi
 
 # Create the symbolic link to the save folder
 symlink_from_path $name $path
+if [ $? -eq 0 ]; then
+    zenity --info \
+        --title=$TITLE \
+        --text="Success!"
+        --width=250
+else
+    zenity --error \
+        --title=$TITLE \
+        --text="Something went wrong. Is there already a save with that name?"
+        --width=250
+    exit 1
