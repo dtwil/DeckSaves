@@ -1,7 +1,7 @@
 #!/bin/bash
 DOWNLOAD_LINK="https://downloads.rclone.org/rclone-current-linux-amd64.zip"
 WELCOME_MSG="Welcome to DeckSaves!\n\nDeckSaves will be installed to this directory."
-SUCCESS_MSG="Install complete!\n\nAdd folders by running add_saves.sh, and back them up by running decksaves.sh."
+SUCCESS_MSG="Install complete!\n\nRun decksaves.sh to add save folders and back them up."
 
 # Display welcome message
 zenity --info \
@@ -42,9 +42,30 @@ echo "remote_name=DeckSaves" >> decksaves.config
 echo "remote_path=DeckSaves" >> decksaves.config
 chmod +x decksaves.config
 
+# Ask for cloud storage provider
+cloud_storage=$(zenity --list \
+    --text="Select your cloud storage provider below:" \
+    --column="Provider" \
+        "Google Drive" \
+        "Dropbox" \
+        "Microsoft OneDrive" \
+        "pCloud")
+cloud_storage=$(case "$cloud_storage" in
+    ("Google Drive") echo "drive" ;;
+    ("Dropbox") echo "dropbox" ;;
+    ("Microsoft OneDrive") echo "onedrive" ;;
+    ("pCloud") echo "pcloud" ;;
+    esac)
+echo "cloud_storage=$cloud_storage" >> decksaves.config
+if [ $? -ne 0 ]; then
+    zenity --error \
+        --text="DeckSave did not finish setup. Try running the installer again."
+        --width=250
+    exit 1
+
 # Create rclone config
 . decksaves.config
-timeout 1m .$rclone_path config create $remote_name drive
+timeout 1m .$rclone_path config create $remote_name $cloud_storage
 
 # Show success dialog
 if [ $? -eq 0 ]; then
