@@ -28,7 +28,7 @@ if [ ! -d "$path" ]; then
         --title="$TITLE" \
         --text="The given path does not exist or is not a folder." \
         --width=250
-    ./add_saves.sh
+    ./bin/add_saves.sh
     exit
 fi
 
@@ -37,12 +37,13 @@ symlink_from_path $name $path
 if [ $? -eq 0 ]; then
     zenity --info \
         --title=$TITLE \
-        --text="Success!"
+        --text="Success!" \
         --width=250
     ./decksaves.sh
 else
     zenity --error \
         --title=$TITLE \
-        --text="Something went wrong. Is there already a save with that name?"
+        --text="Something went wrong. Is there already a save with that name?" \
         --width=250
-    ./add_saves.sh
+    ./bin/add_saves.sh
+fi

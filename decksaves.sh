@@ -13,7 +13,7 @@ zenity --question \
     --width=250
 
 if [ $? -eq 0 ]; then
-    ./upload.sh
+    ./bin/upload.sh
 else
-    ./add_saves.sh
+    ./bin/add_saves.sh
 fi
