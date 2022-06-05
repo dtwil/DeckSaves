@@ -19,7 +19,7 @@ if [ $? -eq 0 ]; then
     name="${name// /_}"
     path=$(echo $game_data | cut -d "|" -f 2)
 else
-    exit 1
+    exit
 fi
 
 # Check that the given path is a valid folder
@@ -28,7 +28,8 @@ if [ ! -d "$path" ]; then
         --title="$TITLE" \
         --text="The given path does not exist or is not a folder." \
         --width=250
-    exit 1
+    ./add_saves.sh
+    exit
 fi
 
 # Create the symbolic link to the save folder
@@ -38,9 +39,10 @@ if [ $? -eq 0 ]; then
         --title=$TITLE \
         --text="Success!"
         --width=250
+    ./decksaves.sh
 else
     zenity --error \
         --title=$TITLE \
         --text="Something went wrong. Is there already a save with that name?"
         --width=250
-    exit 1
+    ./add_saves.sh

@@ -1,14 +1,19 @@
 #!/bin/bash
-. decksaves.config
+TITLE="DeckSaves"
 
-zip -r saves.zip saves/
-.$rclone_path copy saves.zip $remote_name:$remote_path --progress > log.txt 2>&1
+symlink_from_path () {
+    ln -s $2 saves/$1
+}
+
+zenity --question \
+    --title="$TITLE" \
+    --text="Do you want to add a new save or back up your current saves?" \
+    --cancel-label="Add Save" \
+    --ok-label="Back Up Saves" \
+    --width=250
+
 if [ $? -eq 0 ]; then
-    zenity --info \
-        --text="Successfully backed up saves!" \
-        --width=250
+    ./upload.sh
 else
-    zenity --error \
-        --text="Failed to back up saves. See log.txt for details." \
-        --width=250
+    ./add_saves.sh
 fi
